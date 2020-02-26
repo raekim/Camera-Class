@@ -38,58 +38,36 @@ Camera::~Camera()
 
 void Camera::Init()
 {
-	m_vFocus = D3DXVECTOR2(0, 0);
+	m_vFocus = D3DXVECTOR2(HALFSIZEX, HALFSIZEY);
+	m_vTarget = D3DXVECTOR2(0, 0);
+
+	m_vMapSize.x = WINSIZEX;
+	m_vMapSize.y = WINSIZEY;
 }
 
 void Camera::Update(D3DXVECTOR2* target)
 {
-	// 카메라 위치 보간을 위한 변수 설정
-	static float time = 0;
-	static D3DXVECTOR2 from;
-	static float focusTime = 1.0f; // 몇 초에 걸쳐 카메라 시점 전환을 할 것인가
-	ImGui::SliderFloat("focusTime", &focusTime, 1, 10);
+	if (g_pKeyManager->isStayKeyDown(VK_LEFT))
+		m_vTarget.x -= MOVESPEED * g_pTimeManager->GetDeltaTime();
+	else if (g_pKeyManager->isStayKeyDown(VK_RIGHT))
+		m_vTarget.x += MOVESPEED * g_pTimeManager->GetDeltaTime();
 
-	if (g_pKeyManager->isOnceKeyDown(VK_F8))
-	{
-		from = m_vTarget;
-		time = 0;
-	}
-	
+	if (g_pKeyManager->isStayKeyDown(VK_DOWN))
+		m_vTarget.y -= MOVESPEED * g_pTimeManager->GetDeltaTime();
+	else if (g_pKeyManager->isStayKeyDown(VK_UP))
+		m_vTarget.y += MOVESPEED * g_pTimeManager->GetDeltaTime();
+
 	if (target)
 	{
-		// 캐릭터 이동으로 카메라 조종
-		if (time/focusTime <= 1)
-		{
-			// 보간을 사용하여 카메라 시점이 캐릭터로 부드럽게 전환
-			m_vTarget = LinearInterpolation(from, (*target - m_vFocus), time / focusTime);
-			time += g_pTimeManager->GetDeltaTime();
-		}
-		else
-		{
-			m_vTarget = *target - m_vFocus;
-		}
-	}
-	else
-	{
-		// 마우스 이동으로 카메라 조종
-		if (g_ptMouse.x >= WINSIZEX)
-			m_vTarget.x += MOVESPEED * g_pTimeManager->GetDeltaTime();
-		else if (g_ptMouse.x <= 0)
-			m_vTarget.x -= MOVESPEED * g_pTimeManager->GetDeltaTime();
-
-		if (g_ptMouse.y >= WINSIZEY)
-			m_vTarget.y += MOVESPEED * g_pTimeManager->GetDeltaTime();
-		else if (g_ptMouse.y <= 0)
-			m_vTarget.y -= MOVESPEED * g_pTimeManager->GetDeltaTime();
+		m_vTarget = *target - m_vFocus;
 	}
 
-	// 카메라 좌표가 맵 크기를 넘지 못하게 clamp
-	if (m_vTarget.x < 0)
+	if (m_vTarget.x <= 0)
 		m_vTarget.x = 0;
 	else if (m_vTarget.x > m_vMapSize.x - WINSIZEX)
 		m_vTarget.x = m_vMapSize.x - WINSIZEX;
 
-	if (m_vTarget.y < 0)
+	if (m_vTarget.y <= 0)
 		m_vTarget.y = 0;
 	else if (m_vTarget.y > m_vMapSize.y - WINSIZEY)
 		m_vTarget.y = m_vMapSize.y - WINSIZEY;

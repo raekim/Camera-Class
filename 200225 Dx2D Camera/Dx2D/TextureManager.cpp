@@ -47,3 +47,14 @@ const Texture* TextureManager::GetTexture(wstring key)
 
 	return &m_mapTexture[key];
 }
+
+void TextureManager::Release(wstring key)
+{
+	map<wstring, Texture>::iterator iter;
+	iter = m_mapTexture.find(key);
+
+	if (iter == m_mapTexture.end()) return;
+
+	SAFE_RELEASE(iter->second.pSRV);	// 이미지 할당 해제
+	m_mapTexture.erase(iter);
+}

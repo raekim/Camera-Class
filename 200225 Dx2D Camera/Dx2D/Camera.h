@@ -27,6 +27,7 @@ public:
 	void Update(D3DXVECTOR2* target = NULL);
 
 	void SetFocus(D3DXVECTOR2 v) { m_vFocus = v; }
+	void SetFocus(float x, float y) { SetFocus(D3DXVECTOR2(x, y)); }
 	void SetMapSize(D3DXVECTOR2 v) { m_vMapSize = v; }
 	ID3D11Buffer *const *GetViewProjBuffer() { return &m_pViewProjBuffer; }
 };

@@ -1,13 +1,19 @@
 #include "stdafx.h"
 #include "MainGame.h"
+#include "TitleScene.h"
+#include "PlayScene.h"
 
 
 MainGame::MainGame()
 {
 	srand(time(NULL));
 	SetBlendStates();
-	CreateGameClasses();
-	this->Init();
+
+	// 사용할 씬 목록 추가
+	g_pSceneManager->AddScene(SCENE_KIND::Title, new TitleScene);
+	g_pSceneManager->AddScene(SCENE_KIND::Play, new PlayScene);
+
+	g_pSceneManager->Change(SCENE_KIND::Title);
 }
 
 void MainGame::SetBlendStates()
@@ -30,38 +36,13 @@ void MainGame::SetBlendStates()
 
 MainGame::~MainGame()
 {
-	DeleteGameClasses();
-
 	SAFE_RELEASE(m_pNormalBlendState);
 	SAFE_RELEASE(m_pAlphaBlendState);
 }
 
-void MainGame::CreateGameClasses()
-{
-	// 클래스 생성
-	m_pMap = new Map;
-	m_pPlayer = new Player;
-}
-
-void MainGame::DeleteGameClasses()
-{
-	SAFE_DELETE(m_pMap);
-	SAFE_DELETE(m_pPlayer);
-}
-
-void MainGame::Init()
-{
-	if (m_pPlayer)
-		m_pPlayer->Init(m_pMap->GetGroundY());
-}
-
 void MainGame::Update()
 {
-	if (m_pPlayer)
-		m_pPlayer->Update();
-
-	m_vTarget = (g_pKeyManager->isToggleKey(VK_F8)) ? m_pPlayer->GetPosition() : NULL;
-	g_pCamera->Update(m_vTarget);
+	g_pSceneManager->Update();
 }
 
 void MainGame::Render()
@@ -72,11 +53,7 @@ void MainGame::Render()
 
 	DeviceContext->OMSetBlendState(m_pAlphaBlendState, NULL, 0xFF);
 
-	if (m_pMap)
-		m_pMap->Render();
-
-	if (m_pPlayer)
-		m_pPlayer->Render();
+	g_pSceneManager->Render();
 
 	DeviceContext->OMSetBlendState(m_pNormalBlendState, NULL, 0xFF);
 	ImGui::Render();

@@ -20,5 +20,6 @@ public:
 
 	void AddTexture(wstring key, wstring file, wstring path = L"../../_Images/");
 	const Texture* GetTexture(wstring key);
+	void Release(wstring key);
 };
 

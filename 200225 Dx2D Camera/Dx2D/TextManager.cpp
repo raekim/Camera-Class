@@ -88,7 +88,11 @@ void TextManager::AlphabetRender(const char * str, int x, int y, int size)
 	{
 		int index = str[i] - 65;
 
-		if (index <= 25)
+		if (index < 0) // 공백 처리
+		{
+			posX += size * 0.6f;
+		}
+		else if (index <= 25)
 		{
 			m_pUpperLetter[index]->SetConstantScale(size, size);
 			m_pUpperLetter[index]->SetLBPosition(x + posX, y);

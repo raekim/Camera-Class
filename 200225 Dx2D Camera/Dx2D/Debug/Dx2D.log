@@ -1,2 +1,4 @@
-﻿  Camera.cpp
-  Dx2D.vcxproj -> C:\Users\Rae\Desktop\Camera Class\200225 Dx2D Camera\Debug\Dx2D.exe
+﻿  Dx2D.cpp
+c:\users\pl_7c_007\desktop\김래향\camera-class\200225 dx2d camera\dx2d\dx2d.cpp(150): warning C4244: 'initializing': conversion from 'float' to 'int', possible loss of data
+c:\users\pl_7c_007\desktop\김래향\camera-class\200225 dx2d camera\dx2d\dx2d.cpp(151): warning C4244: 'initializing': conversion from 'float' to 'int', possible loss of data
+  Dx2D.vcxproj -> C:\Users\PL_7C_007\Desktop\김래향\Camera-Class\200225 Dx2D Camera\Debug\Dx2D.exe
